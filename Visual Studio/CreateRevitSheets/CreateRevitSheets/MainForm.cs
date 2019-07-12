@@ -1,4 +1,4 @@
-﻿//    Copyright(C) 2018  Christopher Ryan Mackay
+﻿//    Copyright(C) 2018-2019  Christopher Ryan Mackay
 
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -526,7 +526,7 @@ namespace CreateRevitSheets
         private void MainForm_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
         {
             string helpFile = string.Empty;
-            helpFile = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\v2015\CRMRevitTools_Help\create_revit_sheets.html";
+            helpFile = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\v2018\CRMRevitTools_Help\create_revit_sheets.html";
 
             if (File.Exists(helpFile))
             {
