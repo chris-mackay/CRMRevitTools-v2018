@@ -99,10 +99,8 @@ namespace SheetRenamer
             // 
             // txtDrawingDirectory
             // 
-            this.txtDrawingDirectory.Enabled = false;
             this.txtDrawingDirectory.Location = new System.Drawing.Point(18, 45);
             this.txtDrawingDirectory.Name = "txtDrawingDirectory";
-            this.txtDrawingDirectory.ReadOnly = true;
             this.txtDrawingDirectory.Size = new System.Drawing.Size(436, 20);
             this.txtDrawingDirectory.TabIndex = 1;
             // 

@@ -86,96 +86,118 @@ namespace SheetRenamer
         {
             TaskDialog taskDialog = new TaskDialog("Sheet Renamer");
 
-            taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
-            taskDialog.MainInstruction = "Are you sure you want to rename all the sheets in the directory below?";
-            taskDialog.MainContent = drawingDirectory;
-            taskDialog.CommonButtons = TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No;
+            string dir = txtDrawingDirectory.Text.Trim();
 
-            if (taskDialog.Show() == TaskDialogResult.Yes)
+            if (dir == string.Empty)
             {
-                List<string> newFiles = new List<string>();
-                ViewSet viewSet = null;
+                taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconWarning;
+                taskDialog.MainInstruction = "No directory provided.";
+                taskDialog.Show();
+            }
+            else if(!System.IO.Directory.Exists(dir))
+            {
+                taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconWarning;
+                taskDialog.MainInstruction = "The directory provided does not exist.";
+                taskDialog.Show();
+            }
+            else if(cbSheetSets.SelectedIndex < 0)
+            {
+                taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconWarning;
+                taskDialog.MainInstruction = "No sheet set provided.";
+                taskDialog.Show();
+            }
+            else
+            {
+                taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
+                taskDialog.MainInstruction = "Are you sure you want to rename all the sheets in the directory below?";
+                taskDialog.MainContent = drawingDirectory;
+                taskDialog.CommonButtons = TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No;
 
-                //GET ALL THE SHEETS FROM THE SHEETSET SELECTED
-                foreach (ViewSheetSet vs in viewSheetSets)
+                if (taskDialog.Show() == TaskDialogResult.Yes)
                 {
-                    if (vs.Name == cbSheetSets.SelectedItem.ToString())
+                    List<string> newFiles = new List<string>();
+                    ViewSet viewSet = null;
+
+                    //GET ALL THE SHEETS FROM THE SHEETSET SELECTED
+                    foreach (ViewSheetSet vs in viewSheetSets)
                     {
-                        viewSet = vs.Views;
-                    }
-                }
-
-                List<string> reOrderedFiles = new List<string>();
-
-                //LOOP THROUGH ALL THE SHEETS FROM THE SHEETSET, CREATE NEW SHEET NAMES, AND FILL NEW FILE LIST
-                foreach (ViewSheet oldSheet in viewSet)
-                {
-                    
-                    string sheetNumber = string.Empty;
-                    string sheetName = string.Empty;
-
-                    sheetNumber = oldSheet.SheetNumber;
-                    sheetName = oldSheet.Name;
-
-                    string rev = string.Empty;
-
-                    rev = oldSheet.LookupParameter("Current Revision").AsString();
-
-                    string newFileName = string.Empty;
-                    string newFile = string.Empty;
-
-                    newFileName = projectNumber + "-" + sheetNumber + "_" + rev + ".pdf"; //DPS STANDARD FILE NAMING CONVENTION (E.G. 816075-HE-100_0.pdf)
-                    newFile = drawingDirectory + "\\" + newFileName;
-        
-                    newFiles.Add(newFile);
-                    
-                    foreach (string file in oldFilesInDirectory)
-                    {
-                        if (file.Contains(sheetNumber))
+                        if (vs.Name == cbSheetSets.SelectedItem.ToString())
                         {
-                            reOrderedFiles.Add(file);
+                            viewSet = vs.Views;
                         }
                     }
-                    
-                }
 
-                int index = 0;
+                    List<string> reOrderedFiles = new List<string>();
 
-                //LOOP THROUGH EACH FILE IN THE DIRECTORY AND RENAME THE FILE
-                foreach (string oldFile in reOrderedFiles)
-                {
-                    try
+                    //LOOP THROUGH ALL THE SHEETS FROM THE SHEETSET, CREATE NEW SHEET NAMES, AND FILL NEW FILE LIST
+                    foreach (ViewSheet oldSheet in viewSet)
                     {
 
+                        string sheetNumber = string.Empty;
+                        string sheetName = string.Empty;
+
+                        sheetNumber = oldSheet.SheetNumber;
+                        sheetName = oldSheet.Name;
+
+                        string rev = string.Empty;
+
+                        rev = oldSheet.LookupParameter("Current Revision").AsString();
+
+                        string newFileName = string.Empty;
                         string newFile = string.Empty;
-                        newFile = newFiles[index];
 
-                        if (File.Exists(newFile))
+                        newFileName = projectNumber + "-" + sheetNumber + "_" + rev + ".pdf"; //DPS STANDARD FILE NAMING CONVENTION (E.G. 816075-HE-100_0.pdf)
+                        newFile = drawingDirectory + "\\" + newFileName;
+
+                        newFiles.Add(newFile);
+
+                        foreach (string file in oldFilesInDirectory)
                         {
-                            File.Delete(newFile);
+                            if (file.Contains(sheetNumber))
+                            {
+                                reOrderedFiles.Add(file);
+                            }
+                        }
+                    }
+
+                    int index = 0;
+
+                    //LOOP THROUGH EACH FILE IN THE DIRECTORY AND RENAME THE FILE
+                    foreach (string oldFile in reOrderedFiles)
+                    {
+                        try
+                        {
+
+                            string newFile = string.Empty;
+                            newFile = newFiles[index];
+
+                            if (File.Exists(newFile))
+                            {
+                                File.Delete(newFile);
+                            }
+
+                            File.Move(oldFile, newFile);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            TaskDialog errorTaskDialog = new TaskDialog("Sheet Renamer");
+                            errorTaskDialog.MainInstruction = "An error occured while renaming the files. See message below.";
+                            errorTaskDialog.MainContent = "Error Message: " + ex.Message + "\nError Source: " + ex.Source;
+                            errorTaskDialog.CommonButtons = TaskDialogCommonButtons.Ok;
+                            errorTaskDialog.Show();
+                            return;
                         }
 
-                        File.Move(oldFile, newFile);
-                        
-                    }
-                    catch (Exception ex)
-                    {
-                        TaskDialog errorTaskDialog = new TaskDialog("Sheet Renamer");
-                        errorTaskDialog.MainInstruction = "An error occured while renaming the files. See message below.";
-                        errorTaskDialog.MainContent = "Error Message: " + ex.Message + "\nError Source: " + ex.Source;
-                        errorTaskDialog.CommonButtons = TaskDialogCommonButtons.Ok;
-                        errorTaskDialog.Show();
-                        return;
-                    }
+                        index += 1;
 
-                    index += 1;
-
+                    }
+                    TaskDialog completeTaskDialog = new TaskDialog("Sheet Renamer");
+                    completeTaskDialog.MainInstruction = "The sheets have been renamed successfully";
+                    completeTaskDialog.MainContent = "";
+                    completeTaskDialog.CommonButtons = TaskDialogCommonButtons.Ok;
+                    completeTaskDialog.Show();
                 }
-                TaskDialog completeTaskDialog = new TaskDialog("Sheet Renamer");
-                completeTaskDialog.MainInstruction = "The sheets have been renamed successfully";
-                completeTaskDialog.MainContent = "";
-                completeTaskDialog.CommonButtons = TaskDialogCommonButtons.Ok;
-                completeTaskDialog.Show();
             }
         }
 
