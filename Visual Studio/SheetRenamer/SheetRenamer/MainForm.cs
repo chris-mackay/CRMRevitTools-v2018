@@ -31,7 +31,6 @@ namespace SheetRenamer
         Document myRevitDoc = null;
 
         public string projectNumber = string.Empty;
-        public string drawingDirectory = string.Empty;
         List<string> oldFilesInDirectory = new List<string>();
 
         public IList<Element> viewSheetSets = null;
@@ -70,15 +69,9 @@ namespace SheetRenamer
             //GET DIRECTORY WHERE THE DRAWINGS ARE SAVED
             if (fldrBrowser.ShowDialog() == DialogResult.OK)
             {
-                drawingDirectory = fldrBrowser.SelectedPath;
-                txtDrawingDirectory.Text = drawingDirectory;
-
-                string[] fileEntries = Directory.GetFiles(drawingDirectory); //GET ALL THE FILES IN THE SELECTED DIRECTORY FOR RENAMING
-
-                foreach (string oldFile in fileEntries)
-                {
-                    oldFilesInDirectory.Add(oldFile);
-                }
+                string dir = string.Empty;
+                dir = fldrBrowser.SelectedPath;
+                txtDrawingDirectory.Text = dir.Trim();
             }            
         }
         
@@ -87,6 +80,13 @@ namespace SheetRenamer
             TaskDialog taskDialog = new TaskDialog("Sheet Renamer");
 
             string dir = txtDrawingDirectory.Text.Trim();
+
+            string[] fileEntries = Directory.GetFiles(dir); //GET ALL THE FILES IN THE SELECTED DIRECTORY FOR RENAMING
+
+            foreach (string oldFile in fileEntries)
+            {
+                oldFilesInDirectory.Add(oldFile);
+            }
 
             if (dir == string.Empty)
             {
@@ -110,7 +110,7 @@ namespace SheetRenamer
             {
                 taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
                 taskDialog.MainInstruction = "Are you sure you want to rename all the sheets in the directory below?";
-                taskDialog.MainContent = drawingDirectory;
+                taskDialog.MainContent = dir;
                 taskDialog.CommonButtons = TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No;
 
                 if (taskDialog.Show() == TaskDialogResult.Yes)
@@ -147,7 +147,7 @@ namespace SheetRenamer
                         string newFile = string.Empty;
 
                         newFileName = projectNumber + "-" + sheetNumber + "_" + rev + ".pdf"; //DPS STANDARD FILE NAMING CONVENTION (E.G. 816075-HE-100_0.pdf)
-                        newFile = drawingDirectory + "\\" + newFileName;
+                        newFile = dir + "\\" + newFileName;
 
                         newFiles.Add(newFile);
 
@@ -167,7 +167,6 @@ namespace SheetRenamer
                     {
                         try
                         {
-
                             string newFile = string.Empty;
                             newFile = newFiles[index];
 
@@ -177,7 +176,6 @@ namespace SheetRenamer
                             }
 
                             File.Move(oldFile, newFile);
-
                         }
                         catch (Exception ex)
                         {
