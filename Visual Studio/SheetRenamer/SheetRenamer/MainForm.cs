@@ -139,6 +139,27 @@ namespace SheetRenamer
                         sheetNumber = oldSheet.SheetNumber;
                         sheetName = oldSheet.Name;
 
+                        // SHEET NUMBER NEEDS TO BE CHECKED FOR THE FOLLOWING SPECIAL CHARACTERS BELOW
+                        // THESE NEED TO BE REPLACED WITH '-'
+                        // / * " 
+                        // REVIT CHECKS FOR THE FOLLOWING CHARACTERS BELOW SO THEY DON'T NEED TO BE HANDLED
+                        // \ : {} [] ; < > ? ` ~
+
+                        if (sheetNumber.Contains(@"/"))
+                        {
+                           sheetNumber = sheetNumber.Replace(@"/", "-");
+                        }
+
+                        if (sheetNumber.Contains("*"))
+                        {
+                            sheetNumber = sheetNumber.Replace("*", "-");
+                        }
+
+                        if (sheetNumber.Contains("\""))
+                        {
+                            sheetNumber = sheetNumber.Replace("\"", "-");
+                        }
+
                         string rev = string.Empty;
 
                         rev = oldSheet.LookupParameter("Current Revision").AsString();

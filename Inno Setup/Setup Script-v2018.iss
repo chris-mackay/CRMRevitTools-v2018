@@ -1,6 +1,6 @@
 #define MyAppName "CRMRevitTools-v2018"
-#define MyAppVersion "1.0.2"
-#define MyVersionInfoVersion "1.0.2"
+#define MyAppVersion "1.0.3"
+#define MyVersionInfoVersion "1.0.3"
 #define MyAppPublisher "Christopher Ryan Mackay"
 
 [Setup]

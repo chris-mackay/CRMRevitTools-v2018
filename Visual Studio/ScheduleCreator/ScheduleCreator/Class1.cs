@@ -1,4 +1,4 @@
-﻿//    Copyright(C) 2019  Christopher Ryan Mackay
+﻿//    Copyright(C) 2018  Christopher Ryan Mackay
 
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.Attributes;
 
-namespace SheetRenamer
+namespace ScheduleCreator
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
@@ -33,8 +33,7 @@ namespace SheetRenamer
 
             UIApplication uiApp = commandData.Application;
 
-            MainForm myMainForm = new MainForm(uiApp); //CREATES A NEW MAINFORM AND PASSED THE REVIT APP TO ACCESS ELEMENTS
-
+            MainForm myMainForm = new MainForm(uiApp); 
             myMainForm.ShowDialog();
 
             return Result.Succeeded;
