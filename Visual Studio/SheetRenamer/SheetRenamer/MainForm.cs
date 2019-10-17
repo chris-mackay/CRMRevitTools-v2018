@@ -140,10 +140,16 @@ namespace SheetRenamer
                         sheetName = oldSheet.Name;
 
                         // SHEET NUMBER NEEDS TO BE CHECKED FOR THE FOLLOWING SPECIAL CHARACTERS BELOW
+
                         // THESE NEED TO BE REPLACED WITH '-'
-                        // / * " 
-                        // REVIT CHECKS FOR THE FOLLOWING CHARACTERS BELOW SO THEY DON'T NEED TO BE HANDLED
+                        // / * " .
+
+                        // REVIT CHECKS FOR THE FOLLOWING CHARACTERS BELOW AND DON'T NEED TO BE HANDLED
                         // \ : {} [] ; < > ? ` ~
+
+                        // REVIT & WINDOWS ALLOW THE CHARACTERS BELOW
+                        // ! @ # $ % ^ & * ( ) _ + = - ' ,
+
 
                         if (sheetNumber.Contains(@"/"))
                         {
@@ -158,6 +164,11 @@ namespace SheetRenamer
                         if (sheetNumber.Contains("\""))
                         {
                             sheetNumber = sheetNumber.Replace("\"", "-");
+                        }
+
+                        if (sheetNumber.Contains("."))
+                        {
+                            sheetNumber = sheetNumber.Replace(".", "-");
                         }
 
                         string rev = string.Empty;
