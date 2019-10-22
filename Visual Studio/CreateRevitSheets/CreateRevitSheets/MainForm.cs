@@ -59,6 +59,7 @@ namespace CreateRevitSheets
         
         //STRINGS
         private string titleBlockName;
+        private string REVIT_VERSION = "v2018";
         
         #endregion
        
@@ -526,7 +527,7 @@ namespace CreateRevitSheets
         private void MainForm_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
         {
             string helpFile = string.Empty;
-            helpFile = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\v2018\CRMRevitTools_Help\create_revit_sheets.html";
+            helpFile = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\" + REVIT_VERSION + @"\CRMRevitTools_Help\create_revit_sheets.html";
 
             if (File.Exists(helpFile))
             {

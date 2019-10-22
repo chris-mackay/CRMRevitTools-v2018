@@ -32,15 +32,14 @@ namespace CRMTools
             // Create a custom ribbon tab
             string tabName = "CRM Tools";
             application.CreateRibbonTab(tabName);
-
-            string revitVersion = string.Empty;
-            revitVersion = "v2018";
+            
+            string REVIT_VERSION = "v2018";
 
             string commandsPath = "";
-            commandsPath = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\" + revitVersion + @"\Commands\";
+            commandsPath = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\" + REVIT_VERSION + @"\Commands\";
 
             string iconsPath = "";
-            iconsPath = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\" + revitVersion + @"\RevitIcons\";
+            iconsPath = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\" + REVIT_VERSION + @"\RevitIcons\";
 
             #region CreateRevitSheets
 

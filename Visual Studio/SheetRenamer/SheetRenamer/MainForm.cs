@@ -34,6 +34,7 @@ namespace SheetRenamer
         List<string> oldFilesInDirectory = new List<string>();
 
         public IList<Element> viewSheetSets = null;
+        public string REVIT_VERSION = "v2018";
 
         #endregion
 
@@ -240,7 +241,7 @@ namespace SheetRenamer
         {
 
             string helpFile = string.Empty;
-            helpFile = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\v2018\CRMRevitTools_Help\sheet_renamer.html";
+            helpFile = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\" + REVIT_VERSION + @"\CRMRevitTools_Help\sheet_renamer.html";
 
             if (File.Exists(helpFile))
             {
