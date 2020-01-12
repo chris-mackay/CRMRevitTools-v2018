@@ -48,6 +48,7 @@ namespace CreateSheetSet
             viewSheets = sheetsCol.OfClass(typeof(ViewSheet)).ToElements();
 
             rbDescription.Checked = true;
+            btnCreate.Enabled = false;
 
             foreach (ViewSheet vss in viewSheets)
             {
@@ -141,12 +142,21 @@ namespace CreateSheetSet
 
         private void cbRevisions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cbRevisions.SelectedIndex == -1) btnCreate.Enabled = false; else btnCreate.Enabled = true;
+            if (cbRevisions.SelectedIndex == -1) 
+                btnCreate.Enabled = false; 
+            else 
+                btnCreate.Enabled = true;
         }
 
         private void radioButtonCheckChanged(object sender, EventArgs e)
         {
             cbRevisions.Items.Clear();
+            cbRevisions.SelectedIndex = -1;
+
+            if (cbRevisions.SelectedIndex == -1)
+                btnCreate.Enabled = false;
+            else
+                btnCreate.Enabled = true;
 
             foreach (ViewSheet vss in viewSheets)
             {
