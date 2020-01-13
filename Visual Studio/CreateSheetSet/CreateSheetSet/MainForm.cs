@@ -66,8 +66,8 @@ namespace CreateSheetSet
                     }
                     else if (rbNumber.Checked)
                     {
-                        if (!cbRevisions.Items.Contains(r.RevisionNumber))
-                            cbRevisions.Items.Add(r.RevisionNumber);
+                        if (!cbRevisions.Items.Contains(vss.GetRevisionNumberOnSheet(i)))
+                            cbRevisions.Items.Add(vss.GetRevisionNumberOnSheet(i));
                     }
                     else
                     {
@@ -93,7 +93,7 @@ namespace CreateSheetSet
                     Revision r = elem as Revision;
                     
                     string desc = r.Description;
-                    string num = r.RevisionNumber;
+                    string num = vss.GetRevisionNumberOnSheet(i);
                     string date = r.RevisionDate;
 
                     if (rbDescription.Checked)
@@ -174,8 +174,8 @@ namespace CreateSheetSet
                     }
                     else if (rbNumber.Checked)
                     {
-                        if (!cbRevisions.Items.Contains(r.RevisionNumber))
-                            cbRevisions.Items.Add(r.RevisionNumber);
+                        if (!cbRevisions.Items.Contains(vss.GetRevisionNumberOnSheet(i)))
+                            cbRevisions.Items.Add(vss.GetRevisionNumberOnSheet(i));
                     }
                     else
                     {
