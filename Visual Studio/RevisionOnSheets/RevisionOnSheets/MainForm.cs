@@ -1,0 +1,184 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+
+namespace RevisionOnSheets
+{
+    public partial class MainForm : System.Windows.Forms.Form
+    {
+        #region CLASS_LEVEL_VARIABLES
+
+        UIApplication myRevitUIApp = null;
+        Document myRevitDoc = null;
+
+        public IList<Element> viewSheets = null;
+        public IList<Element> revisions = null;
+        public string REVIT_VERSION = "v2018";
+
+        #endregion
+
+        public MainForm()
+        {
+            InitializeComponent();
+        }
+
+        public MainForm(UIApplication incomingUIApp)
+        {
+            InitializeComponent();
+
+            myRevitUIApp = incomingUIApp;
+            myRevitDoc = myRevitUIApp.ActiveUIDocument.Document;
+
+            FilteredElementCollector sheetsCol = new FilteredElementCollector(myRevitDoc);
+            viewSheets = sheetsCol.OfClass(typeof(ViewSheet)).ToElements();
+
+            if (LoadRevisions(cbRevisions))
+            {
+                cbRevisions.SelectedIndex = 0;
+                string rev = cbRevisions.SelectedItem.ToString();
+                LoadSheets(dgvSheets);
+                SetCheckboxes(dgvSheets, rev);
+            }
+        }
+
+        private bool RevisionIsOnSheet(ViewSheet viewSheet, string revDesc)
+        {
+            IList<ElementId> revisionIds = viewSheet.GetAllRevisionIds();
+            bool flag = false;
+
+            foreach (ElementId i in revisionIds)
+            {
+                Element elem = myRevitDoc.GetElement(i);
+                Revision r = elem as Revision;
+
+                if (r.Description == revDesc) flag = true; else flag = false;
+            }
+
+            return flag;
+        }
+
+        private void SetCheckboxes(DataGridView dataGridView, string revDesc)
+        {
+            foreach (DataGridViewRow row in dataGridView.Rows)
+            {
+                foreach (ViewSheet viewSheet in viewSheets)
+                {
+                    if (row.Cells["SheetNumber"].Value.ToString() == viewSheet.SheetNumber)
+                    {
+                        if (RevisionIsOnSheet(viewSheet, revDesc))
+                            row.Cells["Set"].Value = true;
+                        else
+                            row.Cells["Set"].Value = false;
+                    }
+                }
+            }
+        }
+
+        private void LoadSheets(DataGridView dataGridView)
+        {
+            DrawingControl.SetDoubleBuffered(dataGridView);
+            DrawingControl.SuspendDrawing(dataGridView);
+
+            foreach (ViewSheet viewSheet in viewSheets)
+            {
+                string number = viewSheet.SheetNumber;
+                string name = viewSheet.Name;
+                dataGridView.Rows.Add(number, name, false);
+            }
+
+            DrawingControl.ResumeDrawing(dataGridView);
+        }
+
+        private bool LoadRevisions(System.Windows.Forms.ComboBox comboBox)
+        {
+            FilteredElementCollector revCol = new FilteredElementCollector(myRevitDoc);
+            revisions = revCol.OfClass(typeof(Revision)).ToElements();
+            bool flag = false;
+
+            if (revisions.Count > 0)
+            {
+                foreach (Revision revision in revisions)
+                {
+                    string desc = revision.Description;
+
+                    if (!comboBox.Items.Contains(desc))
+                    {
+                        comboBox.Items.Add(desc);
+                    }
+                }
+                flag = true;
+            }
+            else
+                flag = false;
+
+            return flag;
+        }
+
+        private void cbRevisions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetCheckboxes(dgvSheets, cbRevisions.SelectedItem.ToString());
+        }
+    }
+
+    public static class DrawingControl
+    {
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr _hWnd, Int32 _wMsg, bool _wParam, Int32 _lParam);
+
+        private const int WM_SETREDRAW = 11;
+
+        public static void SetDoubleBuffered(System.Windows.Forms.Control _ctrl)
+        {
+            if (!SystemInformation.TerminalServerSession)
+            {
+                typeof(System.Windows.Forms.Control).InvokeMember("DoubleBuffered", (System.Reflection.BindingFlags.SetProperty
+                                | (System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)), null, _ctrl, new object[] {
+                            true});
+            }
+        }
+
+        public static void SetDoubleBuffered_ListControls(List<System.Windows.Forms.Control> _ctrlList)
+        {
+            if (!SystemInformation.TerminalServerSession)
+            {
+                foreach (System.Windows.Forms.Control ctrl in _ctrlList)
+                {
+                    typeof(System.Windows.Forms.Control).InvokeMember("DoubleBuffered", (System.Reflection.BindingFlags.SetProperty
+                                    | (System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)), null, ctrl, new object[] {
+                                true});
+                }
+            }
+        }
+
+        public static void SuspendDrawing(System.Windows.Forms.Control _ctrl)
+        {
+            SendMessage(_ctrl.Handle, WM_SETREDRAW, false, 0);
+        }
+
+        public static void SuspendDrawing_ListControls(List<System.Windows.Forms.Control> _ctrlList)
+        {
+            foreach (System.Windows.Forms.Control ctrl in _ctrlList)
+            {
+                SendMessage(ctrl.Handle, WM_SETREDRAW, false, 0);
+            }
+        }
+
+        public static void ResumeDrawing(System.Windows.Forms.Control _ctrl)
+        {
+            SendMessage(_ctrl.Handle, WM_SETREDRAW, true, 0);
+            _ctrl.Refresh();
+        }
+
+        public static void ResumeDrawing_ListControls(List<System.Windows.Forms.Control> _ctrlList)
+        {
+            foreach (System.Windows.Forms.Control ctrl in _ctrlList)
+            {
+                SendMessage(ctrl.Handle, WM_SETREDRAW, true, 0);
+                ctrl.Refresh();
+            }
+        }
+    }
+}
