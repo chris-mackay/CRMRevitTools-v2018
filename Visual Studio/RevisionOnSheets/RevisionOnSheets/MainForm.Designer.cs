@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvSheets = new System.Windows.Forms.DataGridView();
-            this.SheetNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SheetName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Set = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.cbRevisions = new System.Windows.Forms.ComboBox();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.SheetNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SheetName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Set = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSheets)).BeginInit();
             this.SuspendLayout();
             // 
@@ -48,22 +48,22 @@
             this.dgvSheets.AllowUserToOrderColumns = true;
             this.dgvSheets.AllowUserToResizeColumns = false;
             this.dgvSheets.AllowUserToResizeRows = false;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.dgvSheets.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.dgvSheets.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvSheets.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvSheets.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvSheets.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dgvSheets.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.MenuHighlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvSheets.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.MenuHighlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvSheets.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dgvSheets.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvSheets.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.SheetNumber,
@@ -78,28 +78,6 @@
             this.dgvSheets.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvSheets.Size = new System.Drawing.Size(478, 332);
             this.dgvSheets.TabIndex = 17;
-            // 
-            // SheetNumber
-            // 
-            this.SheetNumber.FillWeight = 114.2132F;
-            this.SheetNumber.HeaderText = "Sheet #";
-            this.SheetNumber.Name = "SheetNumber";
-            this.SheetNumber.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.SheetNumber.Width = 75;
-            // 
-            // SheetName
-            // 
-            this.SheetName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.SheetName.FillWeight = 92.8934F;
-            this.SheetName.HeaderText = "Sheet Name";
-            this.SheetName.Name = "SheetName";
-            // 
-            // Set
-            // 
-            this.Set.FillWeight = 92.8934F;
-            this.Set.HeaderText = "Set";
-            this.Set.Name = "Set";
-            this.Set.Width = 50;
             // 
             // cbRevisions
             // 
@@ -144,6 +122,30 @@
             this.label1.Size = new System.Drawing.Size(88, 13);
             this.label1.TabIndex = 21;
             this.label1.Text = "Revision to apply";
+            // 
+            // SheetNumber
+            // 
+            this.SheetNumber.FillWeight = 114.2132F;
+            this.SheetNumber.HeaderText = "Sheet #";
+            this.SheetNumber.Name = "SheetNumber";
+            this.SheetNumber.ReadOnly = true;
+            this.SheetNumber.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.SheetNumber.Width = 75;
+            // 
+            // SheetName
+            // 
+            this.SheetName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.SheetName.FillWeight = 92.8934F;
+            this.SheetName.HeaderText = "Sheet Name";
+            this.SheetName.Name = "SheetName";
+            this.SheetName.ReadOnly = true;
+            // 
+            // Set
+            // 
+            this.Set.FillWeight = 92.8934F;
+            this.Set.HeaderText = "Set";
+            this.Set.Name = "Set";
+            this.Set.Width = 50;
             // 
             // MainForm
             // 

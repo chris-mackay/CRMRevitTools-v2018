@@ -35,16 +35,16 @@ namespace RevisionOnSheets
             FilteredElementCollector sheetsCol = new FilteredElementCollector(myRevitDoc);
             viewSheets = sheetsCol.OfClass(typeof(ViewSheet)).ToElements();
 
-            if (LoadRevisions(cbRevisions))
-            {
-                cbRevisions.SelectedIndex = 0;
-                string rev = cbRevisions.SelectedItem.ToString();
-                LoadSheets(dgvSheets);
-                SetCheckboxes(dgvSheets, rev);
-            }
+            LoadRevisions(cbRevisions);
+
+            cbRevisions.SelectedIndex = 0;
+            int seq = cbRevisions.SelectedIndex + 1;
+
+            LoadSheets(dgvSheets);
+            SetCheckboxes(dgvSheets, seq);
         }
 
-        private bool RevisionIsOnSheet(ViewSheet viewSheet, string revDesc)
+        private bool RevisionIsOnSheet(ViewSheet viewSheet, int sequence)
         {
             IList<ElementId> revisionIds = viewSheet.GetAllRevisionIds();
             bool flag = false;
@@ -54,13 +54,13 @@ namespace RevisionOnSheets
                 Element elem = myRevitDoc.GetElement(i);
                 Revision r = elem as Revision;
 
-                if (r.Description == revDesc) flag = true; else flag = false;
+                if (r.SequenceNumber == sequence) flag = true; else flag = false;
             }
 
             return flag;
         }
 
-        private void SetCheckboxes(DataGridView dataGridView, string revDesc)
+        private void SetCheckboxes(DataGridView dataGridView, int sequence)
         {
             foreach (DataGridViewRow row in dataGridView.Rows)
             {
@@ -68,7 +68,7 @@ namespace RevisionOnSheets
                 {
                     if (row.Cells["SheetNumber"].Value.ToString() == viewSheet.SheetNumber)
                     {
-                        if (RevisionIsOnSheet(viewSheet, revDesc))
+                        if (RevisionIsOnSheet(viewSheet, sequence))
                             row.Cells["Set"].Value = true;
                         else
                             row.Cells["Set"].Value = false;
@@ -92,34 +92,28 @@ namespace RevisionOnSheets
             DrawingControl.ResumeDrawing(dataGridView);
         }
 
-        private bool LoadRevisions(System.Windows.Forms.ComboBox comboBox)
+        private void LoadRevisions(System.Windows.Forms.ComboBox comboBox)
         {
             FilteredElementCollector revCol = new FilteredElementCollector(myRevitDoc);
             revisions = revCol.OfClass(typeof(Revision)).ToElements();
-            bool flag = false;
 
-            if (revisions.Count > 0)
+            foreach (Revision revision in revisions)
             {
-                foreach (Revision revision in revisions)
+                string seq = revision.SequenceNumber.ToString();
+                string desc = revision.Description;
+                string item = "Seq. " + seq + " - " + desc;
+
+                if (!comboBox.Items.Contains(item))
                 {
-                    string desc = revision.Description;
-
-                    if (!comboBox.Items.Contains(desc))
-                    {
-                        comboBox.Items.Add(desc);
-                    }
+                    comboBox.Items.Add(item);
                 }
-                flag = true;
             }
-            else
-                flag = false;
-
-            return flag;
         }
 
         private void cbRevisions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SetCheckboxes(dgvSheets, cbRevisions.SelectedItem.ToString());
+            int seq = cbRevisions.SelectedIndex + 1;
+            SetCheckboxes(dgvSheets, seq);
         }
     }
 
