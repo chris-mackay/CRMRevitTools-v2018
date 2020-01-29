@@ -55,26 +55,28 @@ namespace RevisionOnSheets
                 Revision r = elem as Revision;
 
                 if (r.SequenceNumber == sequence) flag = true; else flag = false;
+                if (flag) break;
             }
 
             return flag;
         }
 
-        private void SetRevisionOnSheet(ViewSheet viewSheet, Revision revision)
+        private void RemoveRevisionOnSheet(ViewSheet viewSheet, Revision revisionToRemove)
         {
-            List<ElementId> elementIds = new List<ElementId>();
-            elementIds.Add(revision.Id);
+            IList<ElementId> revisionIds = null;
+            revisionIds = viewSheet.GetAllRevisionIds();
+            revisionIds.Remove(revisionToRemove.Id);
 
-            IList<ElementId> revsOnSheet = null;
-            revsOnSheet = viewSheet.GetAllRevisionIds();
+            viewSheet.SetAdditionalRevisionIds(revisionIds);
+        }
 
-            foreach (ElementId id in elementIds)
-            {
-                if (!revsOnSheet.Contains(id))
-                {
-                    viewSheet.SetAdditionalRevisionIds(elementIds);
-                }
-            }
+        private void AddRevisionOnSheet(ViewSheet viewSheet, Revision revisionToAdd)
+        {
+            IList<ElementId> revisionIds = null;
+            revisionIds = viewSheet.GetAllRevisionIds();
+            revisionIds.Add(revisionToAdd.Id);
+
+            viewSheet.SetAdditionalRevisionIds(revisionIds);
         }
 
         private void SetCheckboxes(DataGridView dataGridView, int sequence)
@@ -155,7 +157,19 @@ namespace RevisionOnSheets
                             {
                                 if (revision.SequenceNumber == seq)
                                 {
-                                    SetRevisionOnSheet(viewSheet, revision);
+                                    AddRevisionOnSheet(viewSheet, revision);
+                                }
+                            }
+                        }
+                        else if (viewSheet.SheetNumber == sheetNumber && set == false)
+                        {
+                            int seq = cbRevisions.SelectedIndex + 1;
+
+                            foreach (Revision revision in revisions)
+                            {
+                                if (revision.SequenceNumber == seq)
+                                {
+                                    RemoveRevisionOnSheet(viewSheet, revision);
                                 }
                             }
                         }
