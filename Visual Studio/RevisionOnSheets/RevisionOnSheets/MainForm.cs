@@ -60,6 +60,23 @@ namespace RevisionOnSheets
             return flag;
         }
 
+        private void SetRevisionOnSheet(ViewSheet viewSheet, Revision revision)
+        {
+            List<ElementId> elementIds = new List<ElementId>();
+            elementIds.Add(revision.Id);
+
+            IList<ElementId> revsOnSheet = null;
+            revsOnSheet = viewSheet.GetAllRevisionIds();
+
+            foreach (ElementId id in elementIds)
+            {
+                if (!revsOnSheet.Contains(id))
+                {
+                    viewSheet.SetAdditionalRevisionIds(elementIds);
+                }
+            }
+        }
+
         private void SetCheckboxes(DataGridView dataGridView, int sequence)
         {
             foreach (DataGridViewRow row in dataGridView.Rows)
@@ -115,63 +132,103 @@ namespace RevisionOnSheets
             int seq = cbRevisions.SelectedIndex + 1;
             SetCheckboxes(dgvSheets, seq);
         }
-    }
 
-    public static class DrawingControl
-    {
-        [DllImport("user32.dll")]
-        public static extern int SendMessage(IntPtr _hWnd, Int32 _wMsg, bool _wParam, Int32 _lParam);
-
-        private const int WM_SETREDRAW = 11;
-
-        public static void SetDoubleBuffered(System.Windows.Forms.Control _ctrl)
+        private void btnOK_Click(object sender, EventArgs e)
         {
-            if (!SystemInformation.TerminalServerSession)
+            try
             {
-                typeof(System.Windows.Forms.Control).InvokeMember("DoubleBuffered", (System.Reflection.BindingFlags.SetProperty
-                                | (System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)), null, _ctrl, new object[] {
-                            true});
+                Transaction trans = new Transaction(myRevitDoc, "Revision On Sheets");
+                trans.Start();
+
+                foreach (DataGridViewRow row in dgvSheets.Rows)
+                {
+                    foreach (ViewSheet viewSheet in viewSheets)
+                    {
+                        string sheetNumber = row.Cells["SheetNumber"].Value.ToString();
+                        bool set = bool.Parse(row.Cells["Set"].Value.ToString());
+
+                        if (viewSheet.SheetNumber == sheetNumber && set == true)
+                        {
+                            int seq = cbRevisions.SelectedIndex + 1;
+
+                            foreach (Revision revision in revisions)
+                            {
+                                if (revision.SequenceNumber == seq)
+                                {
+                                    SetRevisionOnSheet(viewSheet, revision);
+                                }
+                            }
+                        }
+                    }
+                }
+                trans.Commit();
+            }
+            catch (Exception ex)
+            {
+                TaskDialog td = new TaskDialog("Error");
+                td.MainInstruction = "Failed to set revision";
+                td.MainContent = ex.Message;
+                td.Show();
+                return;
             }
         }
 
-        public static void SetDoubleBuffered_ListControls(List<System.Windows.Forms.Control> _ctrlList)
+        public static class DrawingControl
         {
-            if (!SystemInformation.TerminalServerSession)
+            [DllImport("user32.dll")]
+            public static extern int SendMessage(IntPtr _hWnd, Int32 _wMsg, bool _wParam, Int32 _lParam);
+
+            private const int WM_SETREDRAW = 11;
+
+            public static void SetDoubleBuffered(System.Windows.Forms.Control _ctrl)
+            {
+                if (!SystemInformation.TerminalServerSession)
+                {
+                    typeof(System.Windows.Forms.Control).InvokeMember("DoubleBuffered", (System.Reflection.BindingFlags.SetProperty
+                                    | (System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)), null, _ctrl, new object[] {
+                            true});
+                }
+            }
+
+            public static void SetDoubleBuffered_ListControls(List<System.Windows.Forms.Control> _ctrlList)
+            {
+                if (!SystemInformation.TerminalServerSession)
+                {
+                    foreach (System.Windows.Forms.Control ctrl in _ctrlList)
+                    {
+                        typeof(System.Windows.Forms.Control).InvokeMember("DoubleBuffered", (System.Reflection.BindingFlags.SetProperty
+                                        | (System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)), null, ctrl, new object[] {
+                                true});
+                    }
+                }
+            }
+
+            public static void SuspendDrawing(System.Windows.Forms.Control _ctrl)
+            {
+                SendMessage(_ctrl.Handle, WM_SETREDRAW, false, 0);
+            }
+
+            public static void SuspendDrawing_ListControls(List<System.Windows.Forms.Control> _ctrlList)
             {
                 foreach (System.Windows.Forms.Control ctrl in _ctrlList)
                 {
-                    typeof(System.Windows.Forms.Control).InvokeMember("DoubleBuffered", (System.Reflection.BindingFlags.SetProperty
-                                    | (System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)), null, ctrl, new object[] {
-                                true});
+                    SendMessage(ctrl.Handle, WM_SETREDRAW, false, 0);
                 }
             }
-        }
 
-        public static void SuspendDrawing(System.Windows.Forms.Control _ctrl)
-        {
-            SendMessage(_ctrl.Handle, WM_SETREDRAW, false, 0);
-        }
-
-        public static void SuspendDrawing_ListControls(List<System.Windows.Forms.Control> _ctrlList)
-        {
-            foreach (System.Windows.Forms.Control ctrl in _ctrlList)
+            public static void ResumeDrawing(System.Windows.Forms.Control _ctrl)
             {
-                SendMessage(ctrl.Handle, WM_SETREDRAW, false, 0);
+                SendMessage(_ctrl.Handle, WM_SETREDRAW, true, 0);
+                _ctrl.Refresh();
             }
-        }
 
-        public static void ResumeDrawing(System.Windows.Forms.Control _ctrl)
-        {
-            SendMessage(_ctrl.Handle, WM_SETREDRAW, true, 0);
-            _ctrl.Refresh();
-        }
-
-        public static void ResumeDrawing_ListControls(List<System.Windows.Forms.Control> _ctrlList)
-        {
-            foreach (System.Windows.Forms.Control ctrl in _ctrlList)
+            public static void ResumeDrawing_ListControls(List<System.Windows.Forms.Control> _ctrlList)
             {
-                SendMessage(ctrl.Handle, WM_SETREDRAW, true, 0);
-                ctrl.Refresh();
+                foreach (System.Windows.Forms.Control ctrl in _ctrlList)
+                {
+                    SendMessage(ctrl.Handle, WM_SETREDRAW, true, 0);
+                    ctrl.Refresh();
+                }
             }
         }
     }

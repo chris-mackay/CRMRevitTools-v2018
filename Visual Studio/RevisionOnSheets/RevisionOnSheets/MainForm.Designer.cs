@@ -31,13 +31,13 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvSheets = new System.Windows.Forms.DataGridView();
+            this.SheetNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SheetName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Set = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.cbRevisions = new System.Windows.Forms.ComboBox();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.SheetNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SheetName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Set = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSheets)).BeginInit();
             this.SuspendLayout();
             // 
@@ -79,6 +79,30 @@
             this.dgvSheets.Size = new System.Drawing.Size(478, 332);
             this.dgvSheets.TabIndex = 17;
             // 
+            // SheetNumber
+            // 
+            this.SheetNumber.FillWeight = 114.2132F;
+            this.SheetNumber.HeaderText = "Sheet #";
+            this.SheetNumber.Name = "SheetNumber";
+            this.SheetNumber.ReadOnly = true;
+            this.SheetNumber.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.SheetNumber.Width = 75;
+            // 
+            // SheetName
+            // 
+            this.SheetName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.SheetName.FillWeight = 92.8934F;
+            this.SheetName.HeaderText = "Sheet Name";
+            this.SheetName.Name = "SheetName";
+            this.SheetName.ReadOnly = true;
+            // 
+            // Set
+            // 
+            this.Set.FillWeight = 92.8934F;
+            this.Set.HeaderText = "Set";
+            this.Set.Name = "Set";
+            this.Set.Width = 50;
+            // 
             // cbRevisions
             // 
             this.cbRevisions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -113,6 +137,7 @@
             this.btnOK.TabIndex = 20;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // label1
             // 
@@ -122,30 +147,6 @@
             this.label1.Size = new System.Drawing.Size(88, 13);
             this.label1.TabIndex = 21;
             this.label1.Text = "Revision to apply";
-            // 
-            // SheetNumber
-            // 
-            this.SheetNumber.FillWeight = 114.2132F;
-            this.SheetNumber.HeaderText = "Sheet #";
-            this.SheetNumber.Name = "SheetNumber";
-            this.SheetNumber.ReadOnly = true;
-            this.SheetNumber.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.SheetNumber.Width = 75;
-            // 
-            // SheetName
-            // 
-            this.SheetName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.SheetName.FillWeight = 92.8934F;
-            this.SheetName.HeaderText = "Sheet Name";
-            this.SheetName.Name = "SheetName";
-            this.SheetName.ReadOnly = true;
-            // 
-            // Set
-            // 
-            this.Set.FillWeight = 92.8934F;
-            this.Set.HeaderText = "Set";
-            this.Set.Name = "Set";
-            this.Set.Width = 50;
             // 
             // MainForm
             // 
