@@ -50,42 +50,13 @@ namespace CreateSheetSet
             rbSequence.Checked = true;
             btnCreate.Enabled = false;
 
-            foreach (ViewSheet vss in viewSheets)
-            {
-                IList<ElementId> revisionIds = vss.GetAllRevisionIds();
-
-                foreach (ElementId i in revisionIds)
-                {
-                    Element elem = myRevitDoc.GetElement(i);
-                    Revision r = elem as Revision;
-
-                    if (rbSequence.Checked)
-                    {
-                        int seq = r.SequenceNumber;
-                        string desc = r.Description;
-                        string item = "Seq. " + seq + " - " + desc;
-
-                        if (!cbRevisions.Items.Contains(item))
-                            cbRevisions.Items.Add(item);
-                    }
-                    else if (rbNumber.Checked)
-                    {
-                        if (!cbRevisions.Items.Contains(vss.GetRevisionNumberOnSheet(i)))
-                            cbRevisions.Items.Add(vss.GetRevisionNumberOnSheet(i));
-                    }
-                    else
-                    {
-                        if (!cbRevisions.Items.Contains(r.RevisionDate))
-                            cbRevisions.Items.Add(r.RevisionDate);
-                    }
-                }
-            }
+            LoadItems();
         }
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
             string prop = cbRevisions.SelectedItem.ToString();
-            int selectedSequence = cbRevisions.SelectedIndex + 1;
+            int selectedSequence = RevisionSequenceNumber(prop);
 
             ViewSet set = new ViewSet();
 
@@ -154,16 +125,32 @@ namespace CreateSheetSet
                 btnCreate.Enabled = true;
         }
 
-        private void radioButtonCheckChanged(object sender, EventArgs e)
+        private int RevisionSequenceNumber(string selectedSequenceName)
         {
-            cbRevisions.Items.Clear();
-            cbRevisions.SelectedIndex = -1;
+            int seqNum = 0;
 
-            if (cbRevisions.SelectedIndex == -1)
-                btnCreate.Enabled = false;
-            else
-                btnCreate.Enabled = true;
+            int from = selectedSequenceName.IndexOf("Seq. ") + "Seq. ".Length;
+            int to = selectedSequenceName.IndexOf(" - ");
 
+            string num = selectedSequenceName.Substring(from, to - from);
+            num = num.Trim();
+
+            seqNum = int.Parse(num);
+
+            return seqNum;
+        }
+
+        private string RevisionSequenceName(Revision revision, string desc)
+        {
+            string seqName = string.Empty;
+
+            seqName = "Seq. " + revision.SequenceNumber + " - " + desc;
+
+            return seqName;
+        }
+
+        private void LoadItems()
+        {
             foreach (ViewSheet vss in viewSheets)
             {
                 IList<ElementId> revisionIds = vss.GetAllRevisionIds();
@@ -175,12 +162,10 @@ namespace CreateSheetSet
 
                     if (rbSequence.Checked)
                     {
-                        int seq = r.SequenceNumber;
-                        string desc = r.Description;
-                        string item = "Seq. " + seq + " - " + desc;
+                        string sequenceName = RevisionSequenceName(r, r.Description);
 
-                        if (!cbRevisions.Items.Contains(item))
-                            cbRevisions.Items.Add(item);
+                        if (!cbRevisions.Items.Contains(sequenceName))
+                            cbRevisions.Items.Add(sequenceName);
                     }
                     else if (rbNumber.Checked)
                     {
@@ -194,6 +179,19 @@ namespace CreateSheetSet
                     }
                 }
             }
+        }
+
+        private void radioButtonCheckChanged(object sender, EventArgs e)
+        {
+            cbRevisions.Items.Clear();
+            cbRevisions.SelectedIndex = -1;
+
+            if (cbRevisions.SelectedIndex == -1)
+                btnCreate.Enabled = false;
+            else
+                btnCreate.Enabled = true;
+
+            LoadItems();
         }
     }
 }
