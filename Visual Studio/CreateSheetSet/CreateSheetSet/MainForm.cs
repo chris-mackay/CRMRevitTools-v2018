@@ -47,7 +47,7 @@ namespace CreateSheetSet
             FilteredElementCollector sheetsCol = new FilteredElementCollector(myRevitDoc);
             viewSheets = sheetsCol.OfClass(typeof(ViewSheet)).ToElements();
 
-            rbDescription.Checked = true;
+            rbSequence.Checked = true;
             btnCreate.Enabled = false;
 
             foreach (ViewSheet vss in viewSheets)
@@ -59,10 +59,14 @@ namespace CreateSheetSet
                     Element elem = myRevitDoc.GetElement(i);
                     Revision r = elem as Revision;
 
-                    if (rbDescription.Checked)
+                    if (rbSequence.Checked)
                     {
-                        if (!cbRevisions.Items.Contains(r.Description))
-                            cbRevisions.Items.Add(r.Description);
+                        int seq = r.SequenceNumber;
+                        string desc = r.Description;
+                        string item = "Seq. " + seq + " - " + desc;
+
+                        if (!cbRevisions.Items.Contains(item))
+                            cbRevisions.Items.Add(item);
                     }
                     else if (rbNumber.Checked)
                     {
@@ -80,7 +84,9 @@ namespace CreateSheetSet
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            string rev = cbRevisions.SelectedItem.ToString();
+            string prop = cbRevisions.SelectedItem.ToString();
+            int selectedSequence = cbRevisions.SelectedIndex + 1;
+
             ViewSet set = new ViewSet();
 
             foreach (ViewSheet vss in viewSheets)
@@ -92,23 +98,23 @@ namespace CreateSheetSet
                     Element elem = myRevitDoc.GetElement(i);
                     Revision r = elem as Revision;
                     
-                    string desc = r.Description;
+                    int sequenceNumber = r.SequenceNumber;
                     string num = vss.GetRevisionNumberOnSheet(i);
                     string date = r.RevisionDate;
 
-                    if (rbDescription.Checked)
+                    if (rbSequence.Checked)
                     {
-                        if (desc == rev)
+                        if (selectedSequence == sequenceNumber)
                             set.Insert(vss);
                     }
                     else if (rbNumber.Checked)
                     {
-                        if (num == rev)
+                        if (num == prop)
                             set.Insert(vss);
                     }
                     else
                     {
-                        if (date == rev)
+                        if (date == prop)
                             set.Insert(vss);
                     }
                 }
@@ -124,16 +130,16 @@ namespace CreateSheetSet
 
             try
             {
-                viewSheetSetting.SaveAs(rev);
+                viewSheetSetting.SaveAs(prop);
                 TaskDialog dialog = new TaskDialog("Create Sheet Set");
-                dialog.MainInstruction = rev + " was created successfully";
+                dialog.MainInstruction = prop + " was created successfully";
                 trans.Commit();
                 dialog.Show();
             }
             catch (Exception ex)
             {
                 TaskDialog dialog = new TaskDialog("Create Sheet Set");
-                dialog.MainInstruction = "Failed to create " + rev;
+                dialog.MainInstruction = "Failed to create " + prop;
                 dialog.MainContent = ex.Message;
                 trans.RollBack();
                 dialog.Show();
@@ -143,7 +149,7 @@ namespace CreateSheetSet
         private void cbRevisions_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbRevisions.SelectedIndex == -1) 
-                btnCreate.Enabled = false; 
+                btnCreate.Enabled = false;
             else 
                 btnCreate.Enabled = true;
         }
@@ -167,10 +173,14 @@ namespace CreateSheetSet
                     Element elem = myRevitDoc.GetElement(i);
                     Revision r = elem as Revision;
 
-                    if (rbDescription.Checked)
+                    if (rbSequence.Checked)
                     {
-                        if (!cbRevisions.Items.Contains(r.Description))
-                            cbRevisions.Items.Add(r.Description);
+                        int seq = r.SequenceNumber;
+                        string desc = r.Description;
+                        string item = "Seq. " + seq + " - " + desc;
+
+                        if (!cbRevisions.Items.Contains(item))
+                            cbRevisions.Items.Add(item);
                     }
                     else if (rbNumber.Checked)
                     {
