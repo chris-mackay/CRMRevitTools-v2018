@@ -30,6 +30,7 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.dgvSheets = new System.Windows.Forms.DataGridView();
             this.SheetNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SheetName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -38,6 +39,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSheets)).BeginInit();
             this.SuspendLayout();
             // 
@@ -70,14 +72,16 @@
             this.SheetName,
             this.Set});
             this.dgvSheets.GridColor = System.Drawing.SystemColors.ControlLight;
-            this.dgvSheets.Location = new System.Drawing.Point(12, 56);
+            this.dgvSheets.Location = new System.Drawing.Point(12, 140);
             this.dgvSheets.Name = "dgvSheets";
             this.dgvSheets.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.dgvSheets.RowHeadersVisible = false;
             this.dgvSheets.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.dgvSheets.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvSheets.Size = new System.Drawing.Size(478, 332);
-            this.dgvSheets.TabIndex = 17;
+            this.dgvSheets.Size = new System.Drawing.Size(574, 436);
+            this.dgvSheets.TabIndex = 3;
+            this.dgvSheets.TabStop = false;
+            this.dgvSheets.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dgvSheets_MouseUp);
             // 
             // SheetNumber
             // 
@@ -109,21 +113,23 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cbRevisions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbRevisions.FormattingEnabled = true;
-            this.cbRevisions.Location = new System.Drawing.Point(106, 16);
+            this.cbRevisions.Location = new System.Drawing.Point(106, 102);
             this.cbRevisions.Name = "cbRevisions";
-            this.cbRevisions.Size = new System.Drawing.Size(384, 21);
+            this.cbRevisions.Size = new System.Drawing.Size(480, 21);
             this.cbRevisions.Sorted = true;
-            this.cbRevisions.TabIndex = 18;
+            this.cbRevisions.TabIndex = 2;
+            this.cbRevisions.TabStop = false;
             this.cbRevisions.SelectedIndexChanged += new System.EventHandler(this.cbRevisions_SelectedIndexChanged);
             // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(415, 394);
+            this.btnCancel.Location = new System.Drawing.Point(511, 587);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 19;
+            this.btnCancel.TabIndex = 5;
+            this.btnCancel.TabStop = false;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -131,10 +137,11 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(334, 394);
+            this.btnOK.Location = new System.Drawing.Point(430, 587);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 20;
+            this.btnOK.TabIndex = 4;
+            this.btnOK.TabStop = false;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -142,18 +149,28 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 24);
+            this.label1.Location = new System.Drawing.Point(12, 110);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(77, 13);
-            this.label1.TabIndex = 21;
+            this.label1.TabIndex = 1;
             this.label1.Text = "Revision to set";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(486, 65);
+            this.label2.TabIndex = 0;
+            this.label2.Text = resources.GetString("label2.Text");
             // 
             // MainForm
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(502, 429);
+            this.ClientSize = new System.Drawing.Size(598, 622);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnCancel);
@@ -161,7 +178,7 @@
             this.Controls.Add(this.dgvSheets);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(518, 468);
+            this.MinimumSize = new System.Drawing.Size(614, 661);
             this.Name = "MainForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -182,5 +199,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn SheetNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn SheetName;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Set;
+        private System.Windows.Forms.Label label2;
     }
 }

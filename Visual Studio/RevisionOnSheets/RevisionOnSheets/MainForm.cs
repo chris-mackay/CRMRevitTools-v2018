@@ -14,8 +14,8 @@ namespace RevisionOnSheets
         UIApplication myRevitUIApp = null;
         Document myRevitDoc = null;
 
-        public IList<Element> viewSheets = null;
-        public IList<Element> revisions = null;
+        public IList<Element> viewSheets_ENTIRE_PROJECT = null;
+        public IList<Element> revisions_ENTIRE_PROJECT = null;
         public string REVIT_VERSION = "v2018";
 
         #endregion
@@ -33,7 +33,7 @@ namespace RevisionOnSheets
             myRevitDoc = myRevitUIApp.ActiveUIDocument.Document;
 
             FilteredElementCollector sheetsCol = new FilteredElementCollector(myRevitDoc);
-            viewSheets = sheetsCol.OfClass(typeof(ViewSheet)).ToElements();
+            viewSheets_ENTIRE_PROJECT = sheetsCol.OfClass(typeof(ViewSheet)).ToElements();
 
             LoadRevisions(cbRevisions);
 
@@ -42,6 +42,43 @@ namespace RevisionOnSheets
 
             LoadSheets(dgvSheets);
             SetCheckboxes(dgvSheets, seq);
+        }
+
+        private void dgvSheets_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                ContextMenu contextMenu = new ContextMenu();
+                contextMenu = SheetsContextMenu();
+                contextMenu.Show(dgvSheets, new System.Drawing.Point(e.X, e.Y));
+            }
+        }
+
+        private ContextMenu SheetsContextMenu()
+        {
+            ContextMenu mnu = new ContextMenu();
+            MenuItem cxmnuSelectAll = new MenuItem("Select All");
+            MenuItem cxmnuUnselectAll = new MenuItem("Unselect All");
+
+            cxmnuSelectAll.Click += new EventHandler(cxmnuSelectAll_Click);
+            cxmnuUnselectAll.Click += new EventHandler(cxmnuUnselectAll_Click);
+
+            mnu.MenuItems.Add(cxmnuSelectAll);
+            mnu.MenuItems.Add(cxmnuUnselectAll);
+
+            return mnu;
+        }
+
+        private void cxmnuUnselectAll_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dgvSheets.Rows)
+                row.Cells["Set"].Value = false;
+        }
+
+        private void cxmnuSelectAll_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dgvSheets.Rows)
+                row.Cells["Set"].Value = true;
         }
 
         private bool RevisionIsOnSheet(ViewSheet viewSheet, int sequence)
@@ -57,7 +94,6 @@ namespace RevisionOnSheets
                 if (r.SequenceNumber == sequence) flag = true; else flag = false;
                 if (flag) break;
             }
-
             return flag;
         }
 
@@ -83,7 +119,7 @@ namespace RevisionOnSheets
         {
             foreach (DataGridViewRow row in dataGridView.Rows)
             {
-                foreach (ViewSheet viewSheet in viewSheets)
+                foreach (ViewSheet viewSheet in viewSheets_ENTIRE_PROJECT)
                 {
                     if (row.Cells["SheetNumber"].Value.ToString() == viewSheet.SheetNumber)
                     {
@@ -101,7 +137,7 @@ namespace RevisionOnSheets
             DrawingControl.SetDoubleBuffered(dataGridView);
             DrawingControl.SuspendDrawing(dataGridView);
 
-            foreach (ViewSheet viewSheet in viewSheets)
+            foreach (ViewSheet viewSheet in viewSheets_ENTIRE_PROJECT)
             {
                 string number = viewSheet.SheetNumber;
                 string name = viewSheet.Name;
@@ -114,18 +150,15 @@ namespace RevisionOnSheets
         private void LoadRevisions(System.Windows.Forms.ComboBox comboBox)
         {
             FilteredElementCollector revCol = new FilteredElementCollector(myRevitDoc);
-            revisions = revCol.OfClass(typeof(Revision)).ToElements();
+            revisions_ENTIRE_PROJECT = revCol.OfClass(typeof(Revision)).ToElements();
 
-            foreach (Revision revision in revisions)
+            foreach (Revision revision in revisions_ENTIRE_PROJECT)
             {
                 string seq = revision.SequenceNumber.ToString();
                 string desc = revision.Description;
                 string item = "Seq. " + seq + " - " + desc;
 
-                if (!comboBox.Items.Contains(item))
-                {
-                    comboBox.Items.Add(item);
-                }
+                if (!comboBox.Items.Contains(item)) comboBox.Items.Add(item);
             }
         }
 
@@ -144,7 +177,7 @@ namespace RevisionOnSheets
 
                 foreach (DataGridViewRow row in dgvSheets.Rows)
                 {
-                    foreach (ViewSheet viewSheet in viewSheets)
+                    foreach (ViewSheet viewSheet in viewSheets_ENTIRE_PROJECT)
                     {
                         string sheetNumber = row.Cells["SheetNumber"].Value.ToString();
                         bool set = bool.Parse(row.Cells["Set"].Value.ToString());
@@ -153,25 +186,15 @@ namespace RevisionOnSheets
                         {
                             int seq = cbRevisions.SelectedIndex + 1;
 
-                            foreach (Revision revision in revisions)
-                            {
-                                if (revision.SequenceNumber == seq)
-                                {
-                                    AddRevisionOnSheet(viewSheet, revision);
-                                }
-                            }
+                            foreach (Revision revision in revisions_ENTIRE_PROJECT)
+                                if (revision.SequenceNumber == seq) AddRevisionOnSheet(viewSheet, revision);
                         }
                         else if (viewSheet.SheetNumber == sheetNumber && set == false)
                         {
                             int seq = cbRevisions.SelectedIndex + 1;
 
-                            foreach (Revision revision in revisions)
-                            {
-                                if (revision.SequenceNumber == seq)
-                                {
-                                    RemoveRevisionOnSheet(viewSheet, revision);
-                                }
-                            }
+                            foreach (Revision revision in revisions_ENTIRE_PROJECT)
+                                if (revision.SequenceNumber == seq) RemoveRevisionOnSheet(viewSheet, revision);
                         }
                     }
                 }
@@ -245,5 +268,6 @@ namespace RevisionOnSheets
                 }
             }
         }
+
     }
 }

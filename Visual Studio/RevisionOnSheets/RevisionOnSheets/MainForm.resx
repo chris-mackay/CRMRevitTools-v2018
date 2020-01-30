@@ -117,4 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Select the revision sequence from the dropdown list that you want to set. Check and uncheck sheets 
+that you want to add or remove the revision sequence from.
+
+NOTE: Revisions that were applied to a sheet with revision clouds cannot be altered. To remove the 
+revisions from those sheets the clouds must be removed manually.</value>
+  </data>
 </root>
