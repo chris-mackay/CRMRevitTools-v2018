@@ -73,14 +73,14 @@ namespace RevisionOnSheets
         private ContextMenu SheetsContextMenu()
         {
             ContextMenu mnu = new ContextMenu();
-            MenuItem cxmnuSelectAll = new MenuItem("Select All");
-            MenuItem cxmnuUnselectAll = new MenuItem("Unselect All");
+            MenuItem cxmnuSetAll = new MenuItem("Set All");
+            MenuItem cxmnuUnsetAll = new MenuItem("Unset All");
 
-            cxmnuSelectAll.Click += new EventHandler(cxmnuSelectAll_Click);
-            cxmnuUnselectAll.Click += new EventHandler(cxmnuUnselectAll_Click);
+            cxmnuSetAll.Click += new EventHandler(cxmnuSelectAll_Click);
+            cxmnuUnsetAll.Click += new EventHandler(cxmnuUnselectAll_Click);
 
-            mnu.MenuItems.Add(cxmnuSelectAll);
-            mnu.MenuItems.Add(cxmnuUnselectAll);
+            mnu.MenuItems.Add(cxmnuSetAll);
+            mnu.MenuItems.Add(cxmnuUnsetAll);
 
             return mnu;
         }
