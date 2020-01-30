@@ -17,6 +17,7 @@ namespace RevisionOnSheets
         public IList<Element> viewSheets_ENTIRE_PROJECT = null;
         public IList<Element> revisions_ENTIRE_PROJECT = null;
         public string REVIT_VERSION = "v2018";
+        private bool shiftKeyIsDown = false;
 
         #endregion
 
@@ -38,10 +39,25 @@ namespace RevisionOnSheets
             LoadRevisions(cbRevisions);
 
             cbRevisions.SelectedIndex = 0;
-            int seq = cbRevisions.SelectedIndex + 1;
+            int seq = RevisionSequenceNumber(cbRevisions.SelectedItem.ToString());
 
             LoadSheets(dgvSheets);
             SetCheckboxes(dgvSheets, seq);
+        }
+
+        private int RevisionSequenceNumber(string selectedSequenceName)
+        {
+            int seqNum = 0;
+
+            int from = selectedSequenceName.IndexOf("Seq. ") + "Seq. ".Length;
+            int to = selectedSequenceName.IndexOf(" - ");
+
+            string num = selectedSequenceName.Substring(from, to - from);
+            num = num.Trim();
+
+            seqNum = int.Parse(num);
+
+            return seqNum;
         }
 
         private void dgvSheets_MouseUp(object sender, MouseEventArgs e)
@@ -118,18 +134,12 @@ namespace RevisionOnSheets
         private void SetCheckboxes(DataGridView dataGridView, int sequence)
         {
             foreach (DataGridViewRow row in dataGridView.Rows)
-            {
                 foreach (ViewSheet viewSheet in viewSheets_ENTIRE_PROJECT)
-                {
                     if (row.Cells["SheetNumber"].Value.ToString() == viewSheet.SheetNumber)
-                    {
                         if (RevisionIsOnSheet(viewSheet, sequence))
                             row.Cells["Set"].Value = true;
                         else
                             row.Cells["Set"].Value = false;
-                    }
-                }
-            }
         }
 
         private void LoadSheets(DataGridView dataGridView)
@@ -147,6 +157,14 @@ namespace RevisionOnSheets
             DrawingControl.ResumeDrawing(dataGridView);
         }
 
+        private string RevisionSequenceName(Revision revision, string desc)
+        {
+            string seqName = string.Empty;
+            seqName = "Seq. " + revision.SequenceNumber + " - " + desc;
+
+            return seqName;
+        }
+
         private void LoadRevisions(System.Windows.Forms.ComboBox comboBox)
         {
             FilteredElementCollector revCol = new FilteredElementCollector(myRevitDoc);
@@ -154,17 +172,15 @@ namespace RevisionOnSheets
 
             foreach (Revision revision in revisions_ENTIRE_PROJECT)
             {
-                string seq = revision.SequenceNumber.ToString();
-                string desc = revision.Description;
-                string item = "Seq. " + seq + " - " + desc;
+                string seq = RevisionSequenceName(revision, revision.Description);
 
-                if (!comboBox.Items.Contains(item)) comboBox.Items.Add(item);
+                if (!comboBox.Items.Contains(seq)) comboBox.Items.Add(seq);
             }
         }
 
         private void cbRevisions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int seq = cbRevisions.SelectedIndex + 1;
+            int seq = RevisionSequenceNumber(cbRevisions.SelectedItem.ToString());
             SetCheckboxes(dgvSheets, seq);
         }
 
@@ -175,8 +191,9 @@ namespace RevisionOnSheets
                 Transaction trans = new Transaction(myRevitDoc, "Revision On Sheets");
                 trans.Start();
 
+                string selectedSequenceName = cbRevisions.SelectedItem.ToString();
+
                 foreach (DataGridViewRow row in dgvSheets.Rows)
-                {
                     foreach (ViewSheet viewSheet in viewSheets_ENTIRE_PROJECT)
                     {
                         string sheetNumber = row.Cells["SheetNumber"].Value.ToString();
@@ -184,20 +201,20 @@ namespace RevisionOnSheets
 
                         if (viewSheet.SheetNumber == sheetNumber && set == true)
                         {
-                            int seq = cbRevisions.SelectedIndex + 1;
+                            int seq = RevisionSequenceNumber(selectedSequenceName);
 
                             foreach (Revision revision in revisions_ENTIRE_PROJECT)
                                 if (revision.SequenceNumber == seq) AddRevisionOnSheet(viewSheet, revision);
                         }
                         else if (viewSheet.SheetNumber == sheetNumber && set == false)
                         {
-                            int seq = cbRevisions.SelectedIndex + 1;
+                            int seq = RevisionSequenceNumber(selectedSequenceName);
 
                             foreach (Revision revision in revisions_ENTIRE_PROJECT)
                                 if (revision.SequenceNumber == seq) RemoveRevisionOnSheet(viewSheet, revision);
                         }
                     }
-                }
+
                 trans.Commit();
             }
             catch (Exception ex)
@@ -269,5 +286,32 @@ namespace RevisionOnSheets
             }
         }
 
+        private void dgvSheets_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == (Keys.ShiftKey | Keys.Shift))
+                shiftKeyIsDown = true;
+        }
+
+        private void dgvSheets_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == (Keys.ShiftKey | Keys.Shift))
+                shiftKeyIsDown = false;
+        }
+
+        private void dgvSheets_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && shiftKeyIsDown 
+                && dgvSheets.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                foreach (DataGridViewColumn col in dgvSheets.Columns)
+                    foreach (DataGridViewRow row in dgvSheets.Rows)
+                        if (dgvSheets[col.Index, row.Index] is DataGridViewCheckBoxCell)
+                            if (row.Selected)
+                            {
+                                bool set = bool.Parse(dgvSheets[col.Index, row.Index].Value.ToString());
+                                dgvSheets[col.Index, row.Index].Value = !set;
+                            }
+            }
+        }
     }
 }

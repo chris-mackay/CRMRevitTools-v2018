@@ -81,6 +81,9 @@
             this.dgvSheets.Size = new System.Drawing.Size(574, 436);
             this.dgvSheets.TabIndex = 3;
             this.dgvSheets.TabStop = false;
+            this.dgvSheets.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvSheets_KeyDown);
+            this.dgvSheets.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dgvSheets_KeyUp);
+            this.dgvSheets.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dgvSheets_MouseClick);
             this.dgvSheets.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dgvSheets_MouseUp);
             // 
             // SheetNumber
