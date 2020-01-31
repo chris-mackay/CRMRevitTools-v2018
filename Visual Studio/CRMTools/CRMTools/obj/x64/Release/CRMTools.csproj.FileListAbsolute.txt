@@ -30,4 +30,3 @@ C:\Programming\CRMRevitTools-v2018\Visual Studio\CRMTools\CRMTools\bin\x64\Relea
 C:\Programming\CRMRevitTools-v2018\Visual Studio\CRMTools\CRMTools\bin\x64\Release\CRMTools.pdb
 C:\Programming\CRMRevitTools-v2018\Visual Studio\CRMTools\CRMTools\obj\x64\Release\CRMTools.dll
 C:\Programming\CRMRevitTools-v2018\Visual Studio\CRMTools\CRMTools\obj\x64\Release\CRMTools.pdb
-C:\Programming\CRMRevitTools-v2018\Visual Studio\CRMTools\CRMTools\obj\x64\Release\CRMTools.csprojAssemblyReference.cache

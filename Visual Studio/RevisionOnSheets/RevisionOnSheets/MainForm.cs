@@ -43,6 +43,8 @@ namespace RevisionOnSheets
 
             LoadSheets(dgvSheets);
             SetCheckboxes(dgvSheets, seq);
+            dgvSheets[1, 0].Selected = true;
+            dgvSheets.ClearSelection();
         }
 
         private int RevisionSequenceNumber(string selectedSequenceName)
