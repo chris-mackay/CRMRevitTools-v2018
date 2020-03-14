@@ -223,70 +223,85 @@ namespace CreateRevitSheets
 
             StringBuilder disregardedSheetNumbers = new StringBuilder();
 
-            string csvLine = null;
-            StreamReader reader = new StreamReader(_filename);
-
             dgvSheetToCreate.Rows.Clear();
 
-            while ((csvLine = reader.ReadLine()) != null)
+            if (!CSVHasDuplicates(_filename))
             {
-                char[] separator = new char[] { ',' };
-                string[] values = csvLine.Split(separator, StringSplitOptions.None);
+                string csvLine = null;
+                StreamReader reader = new StreamReader(_filename);
 
-                try
+                while ((csvLine = reader.ReadLine()) != null)
                 {
-                    //MAKE SURE BOTH VALUES ARE VALID
-                    if (values[0] != "" && values[1] != "")
+                    char[] separator = new char[] { ',' };
+                    string[] values = csvLine.Split(separator, StringSplitOptions.None);
+
+                    try
                     {
-                        string sheetNumber = null;
-                        string sheetName = null;
-
-                        sheetNumber = values[0];
-                        sheetName = values[1];
-
-                        string entry = string.Empty;
-
-                        entry = sheetNumber + ":" + sheetName;
-
-                        if (usedViewSheetNumbers.Contains(sheetNumber))
+                        //MAKE SURE BOTH VALUES ARE VALID
+                        if (values[0] != "" && values[1] != "")
                         {
-                            disregardedSheetsNumbersList.Add(sheetNumber);
-                            disregardedSheetNumbers.Append(sheetNumber + "\n");
+                            string sheetNumber = null;
+                            string sheetName = null;
+
+                            sheetNumber = values[0];
+                            sheetName = values[1];
+
+                            string entry = string.Empty;
+
+                            entry = sheetNumber + ":" + sheetName;
+
+                            if (usedViewSheetNumbers.Contains(sheetNumber))
+                            {
+                                disregardedSheetsNumbersList.Add(sheetNumber);
+                                disregardedSheetNumbers.Append(sheetNumber + "\n");
+                            }
+                            else
+                            {
+                                this.dgvSheetToCreate.Rows.Add(entry, ""); //ADDS THE NEW SHEET TO THE LIST
+                            }
                         }
                         else
                         {
-                            this.dgvSheetToCreate.Rows.Add(entry, ""); //ADDS THE NEW SHEET TO THE LIST
+                            TaskDialog taskDialog = new TaskDialog("Create Sheets");
+
+                            taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconWarning;
+                            taskDialog.MainInstruction = "A Sheet Name and Sheet Number must be provided for each entry.";
+                            taskDialog.MainContent = "Load Sheets has been cancelled. Check your file and try again.";
+                            taskDialog.Show();
+                            break;
                         }
                     }
-                    else
+                    catch (IndexOutOfRangeException)
                     {
                         TaskDialog taskDialog = new TaskDialog("Create Sheets");
 
-                        taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
+                        taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconWarning;
                         taskDialog.MainInstruction = "A Sheet Name and Sheet Number must be provided for each entry.";
                         taskDialog.MainContent = "Load Sheets has been cancelled. Check your file and try again.";
                         taskDialog.Show();
                         break;
                     }
                 }
-                catch (IndexOutOfRangeException)
-                {
-                    TaskDialog taskDialog = new TaskDialog("Create Sheets");
 
-                    taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
-                    taskDialog.MainInstruction = "A Sheet Name and Sheet Number must be provided for each entry.";
-                    taskDialog.MainContent = "Load Sheets has been cancelled. Check your file and try again.";
-                    taskDialog.Show();
-                    break;
-                }
+                reader.Close();
+                reader = null;
+            }
+            else
+            {
+                TaskDialog taskDialog = new TaskDialog("Create Sheets");
+
+                taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconWarning;
+                taskDialog.MainInstruction = "There are duplicate sheet numbers in the csv file.";
+                taskDialog.MainContent = "Remove the duplicates in your file and try again.";
+                taskDialog.Show();
             }
 
             if (disregardedSheetsNumbersList.Count > 0)
             {   
                 TaskDialog taskDialog = new TaskDialog("Create Sheets");
 
-                taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
-                taskDialog.MainInstruction = "The following sheets already exist in the project and will not be added to the list";
+                taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconWarning;
+                taskDialog.MainInstruction = "The following sheets already exist in the project and will not be added to the list.";
                 taskDialog.MainContent = disregardedSheetNumbers.ToString();
                 taskDialog.Show();
             }
@@ -561,6 +576,40 @@ namespace CreateRevitSheets
 
         #endregion
 
+        #region FUNCTIONS
+
+        private bool CSVHasDuplicates(string _filename)
+        {
+            bool flag = false;
+            string csvLine = null;
+            StreamReader reader = new StreamReader(_filename);
+            List<string> numbers = new List<string>();
+
+            while ((csvLine = reader.ReadLine()) != null)
+            {
+                char[] separator = new char[] { ',' };
+                string[] values = csvLine.Split(separator, StringSplitOptions.None);
+                numbers.Add(values[0]);
+            }
+
+            var hashset = new HashSet<string>();
+            foreach (var num in numbers)
+            {
+                if (!hashset.Add(num))
+                {
+                    flag = true;
+                    break;
+                }
+            }
+
+            reader.Close();
+            reader = null;
+
+            return flag;
+        }
+
+        #endregion
+
         #region HELPER VOIDS
 
         private void CreateSheets()
@@ -588,7 +637,7 @@ namespace CreateRevitSheets
                     {
 
                         #region SELECTS SPECIFIC TITLEBLOCK AND VIEW FROM DOCUMENT
-
+                                               
                         var query = from element in titleblockCollector where element.Name == this.titleBlockName select element;
                         List<Element> titleblockList = query.ToList<Element>();
                         ElementId titleBlockid = titleblockList[0].Id;

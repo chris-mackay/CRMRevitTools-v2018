@@ -10,6 +10,5 @@ C:\Programming\CRMRevitTools-v2018\Visual Studio\CreateRevitSheets\CreateRevitSh
 C:\Programming\CRMRevitTools-v2018\Visual Studio\CreateRevitSheets\CreateRevitSheets\obj\Release\CreateRevitSheets.frmAddSheet.resources
 C:\Programming\CRMRevitTools-v2018\Visual Studio\CreateRevitSheets\CreateRevitSheets\obj\Release\CreateRevitSheets.MainForm.resources
 C:\Programming\CRMRevitTools-v2018\Visual Studio\CreateRevitSheets\CreateRevitSheets\obj\Release\CreateRevitSheets.csproj.GenerateResource.cache
-C:\Programming\CRMRevitTools-v2018\Visual Studio\CreateRevitSheets\CreateRevitSheets\obj\Release\CreateRevitSheets.csproj.CoreCompileInputs.cache
 C:\Programming\CRMRevitTools-v2018\Visual Studio\CreateRevitSheets\CreateRevitSheets\obj\Release\CreateRevitSheets.dll
 C:\Programming\CRMRevitTools-v2018\Visual Studio\CreateRevitSheets\CreateRevitSheets\obj\Release\CreateRevitSheets.pdb
