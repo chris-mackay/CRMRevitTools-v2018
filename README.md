@@ -1,6 +1,6 @@
 # CRMRevitTools-v2018
 
-![Ribbon](CRMRevitTools_Help/ribbon.png?raw=true "Ribbon")
+![Ribbon](Readme_Images/ribbon.png?raw=true "Ribbon")
 
 #### This repository is meant to be a template for creating your own Revit tab menu with custom commands.
 *Cloning this entire repository is required to build the (.exe) installer in the Inno Setup folder*
