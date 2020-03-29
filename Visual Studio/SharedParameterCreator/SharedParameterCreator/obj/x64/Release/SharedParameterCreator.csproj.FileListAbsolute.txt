@@ -56,6 +56,5 @@ C:\Programming\CRMRevitTools-v2018\Visual Studio\SharedParameterCreator\SharedPa
 C:\Programming\CRMRevitTools-v2018\Visual Studio\SharedParameterCreator\SharedParameterCreator\bin\x64\Release\SharedParameterCreator.pdb
 C:\Programming\CRMRevitTools-v2018\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.MainForm.resources
 C:\Programming\CRMRevitTools-v2018\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.csproj.GenerateResource.cache
-C:\Programming\CRMRevitTools-v2018\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.csproj.CoreCompileInputs.cache
 C:\Programming\CRMRevitTools-v2018\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.dll
 C:\Programming\CRMRevitTools-v2018\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.pdb
