@@ -175,6 +175,25 @@ namespace CRMTools
 
             #endregion
 
+            #region About
+
+            // Create a push button
+            PushButtonData btnAbout = new PushButtonData("cmdAbout", "About \nCRM Tools", commandsPath + "About.dll", "About.Class1");
+            btnAbout.ToolTip = "Release information";
+
+            // create bitmap image for button
+            Uri uriLargeImage_About = new Uri(iconsPath + @"32x32\cmdAbout_32x32.bmp");
+            BitmapImage largeImage_About = new BitmapImage(uriLargeImage_About);
+
+            // create bitmap image for button
+            Uri uriSmallImage_About = new Uri(iconsPath + @"16x16\cmdAbout_16x16.bmp");
+            BitmapImage smallImage_About = new BitmapImage(uriSmallImage_About);
+
+            btnAbout.LargeImage = largeImage_About;
+            btnAbout.Image = smallImage_About;
+
+            #endregion
+
             #region ProductionPanelItems
 
             // Create a ribbon panel
@@ -188,6 +207,16 @@ namespace CRMTools
             productionButtons.Add(pnlProductionPanel.AddItem(btnSheetRenamer));
             productionButtons.Add(pnlProductionPanel.AddItem(btnProjectParameters));
             productionButtons.Add(pnlProductionPanel.AddItem(btnRevisionOnSheets));
+
+            #endregion
+
+            #region About
+
+            // Create a ribbon panel
+            RibbonPanel pnlInfo = application.CreateRibbonPanel(tabName, "Info");
+            // Add the buttons to the panel
+            List<RibbonItem> aboutButton = new List<RibbonItem>();
+            aboutButton.Add(pnlInfo.AddItem(btnAbout));
 
             #endregion
 
