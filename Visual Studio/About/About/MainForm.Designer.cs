@@ -47,7 +47,7 @@
             this.btnOK.Location = new System.Drawing.Point(317, 201);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 10;
+            this.btnOK.TabIndex = 9;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnClose_Click);
@@ -58,9 +58,9 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 13);
+            this.label1.Size = new System.Drawing.Size(93, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "CRM Tools";
+            this.label1.Text = "CRM Tools-v2018";
             // 
             // lblVersion
             // 
@@ -79,6 +79,7 @@
             this.lblCurrentChanglog.Name = "lblCurrentChanglog";
             this.lblCurrentChanglog.Size = new System.Drawing.Size(55, 13);
             this.lblCurrentChanglog.TabIndex = 3;
+            this.lblCurrentChanglog.TabStop = true;
             this.lblCurrentChanglog.Text = "linkLabel1";
             this.lblCurrentChanglog.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblCurrentChangelog_LinkClicked);
             // 
@@ -88,7 +89,8 @@
             this.lblChangelog.Location = new System.Drawing.Point(12, 90);
             this.lblChangelog.Name = "lblChangelog";
             this.lblChangelog.Size = new System.Drawing.Size(55, 13);
-            this.lblChangelog.TabIndex = 8;
+            this.lblChangelog.TabIndex = 4;
+            this.lblChangelog.TabStop = true;
             this.lblChangelog.Text = "linkLabel1";
             this.lblChangelog.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblChangelog_LinkClicked);
             // 
@@ -98,7 +100,7 @@
             this.label2.Location = new System.Drawing.Point(12, 188);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(380, 1);
-            this.label2.TabIndex = 9;
+            this.label2.TabIndex = 8;
             // 
             // label3
             // 
@@ -106,9 +108,9 @@
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(12, 44);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(141, 13);
+            this.label3.Size = new System.Drawing.Size(195, 13);
             this.label3.TabIndex = 2;
-            this.label3.Text = "© Christopher Ryan Mackay";
+            this.label3.Text = "© 2018-2020 Christopher Ryan Mackay";
             // 
             // label5
             // 
@@ -116,7 +118,7 @@
             this.label5.Location = new System.Drawing.Point(12, 114);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(380, 1);
-            this.label5.TabIndex = 4;
+            this.label5.TabIndex = 5;
             // 
             // label6
             // 
@@ -125,7 +127,7 @@
             this.label6.Location = new System.Drawing.Point(12, 125);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(236, 13);
-            this.label6.TabIndex = 5;
+            this.label6.TabIndex = 6;
             this.label6.Text = "CRM Tools is an open-source project on GitHub.";
             // 
             // lblSource
@@ -134,7 +136,8 @@
             this.lblSource.Location = new System.Drawing.Point(12, 148);
             this.lblSource.Name = "lblSource";
             this.lblSource.Size = new System.Drawing.Size(55, 13);
-            this.lblSource.TabIndex = 6;
+            this.lblSource.TabIndex = 7;
+            this.lblSource.TabStop = true;
             this.lblSource.Text = "linkLabel1";
             this.lblSource.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblSource_LinkClicked);
             // 
