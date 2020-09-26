@@ -1,0 +1,5 @@
+C:\Programming\LabEquipment\LabEquipment\bin\Debug\LabEquipment.dll
+C:\Programming\LabEquipment\LabEquipment\bin\Debug\LabEquipment.pdb
+C:\Programming\LabEquipment\LabEquipment\obj\Debug\LabEquipment.csprojAssemblyReference.cache
+C:\Programming\LabEquipment\LabEquipment\obj\Debug\LabEquipment.dll
+C:\Programming\LabEquipment\LabEquipment\obj\Debug\LabEquipment.pdb

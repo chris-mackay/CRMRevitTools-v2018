@@ -1,0 +1,6 @@
+C:\Programming\CRMRevitTools-v2018\Visual Studio\Publish\Publish\bin\x64\Debug\Publish.dll
+C:\Programming\CRMRevitTools-v2018\Visual Studio\Publish\Publish\bin\x64\Debug\Publish.pdb
+C:\Programming\CRMRevitTools-v2018\Visual Studio\Publish\Publish\obj\x64\Debug\Publish.MainForm.resources
+C:\Programming\CRMRevitTools-v2018\Visual Studio\Publish\Publish\obj\x64\Debug\Publish.csproj.GenerateResource.cache
+C:\Programming\CRMRevitTools-v2018\Visual Studio\Publish\Publish\obj\x64\Debug\Publish.dll
+C:\Programming\CRMRevitTools-v2018\Visual Studio\Publish\Publish\obj\x64\Debug\Publish.pdb

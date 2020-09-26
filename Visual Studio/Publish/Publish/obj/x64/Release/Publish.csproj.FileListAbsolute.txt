@@ -1,0 +1,5 @@
+C:\Programming\CRMRevitTools-v2018\Visual Studio\Publish\Publish\bin\x64\Release\Publish.dll
+C:\Programming\CRMRevitTools-v2018\Visual Studio\Publish\Publish\obj\x64\Release\Publish.csprojAssemblyReference.cache
+C:\Programming\CRMRevitTools-v2018\Visual Studio\Publish\Publish\obj\x64\Release\Publish.MainForm.resources
+C:\Programming\CRMRevitTools-v2018\Visual Studio\Publish\Publish\obj\x64\Release\Publish.csproj.GenerateResource.cache
+C:\Programming\CRMRevitTools-v2018\Visual Studio\Publish\Publish\obj\x64\Release\Publish.dll
