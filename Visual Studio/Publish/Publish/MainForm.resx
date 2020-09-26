@@ -117,4 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Select a revision sequence from the dropdown list below to publish.
+
+Publishing will print all the sheets in the selected revision sequence.
+Once the sheets are printed, they will be renamed to the format below.
+
+[Project Number] - [Drawing Number] _ [Current Revision]
+
+</value>
+  </data>
 </root>

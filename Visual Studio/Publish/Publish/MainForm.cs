@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using System.Windows.Forms;
 
 namespace Publish
 {
@@ -33,6 +34,7 @@ namespace Publish
 
         ViewSet set = null;
         FileSystemWatcher w = null;
+        DirectoryInfo dInfo = null;
 
         #endregion
 
@@ -47,13 +49,9 @@ namespace Publish
 
             myRevitUIApp = incomingUIApp;
             myRevitDoc = myRevitUIApp.ActiveUIDocument.Document;
-            
 
             FilteredElementCollector sheetsCol = new FilteredElementCollector(myRevitDoc);
             viewSheets = sheetsCol.OfClass(typeof(ViewSheet)).ToElements();
-
-            rbSequence.Checked = true;
-            btnPublish.Enabled = false;
 
             LoadItems();
         }
@@ -64,107 +62,101 @@ namespace Publish
             // Confirm that all the correct files are finished printing
             // If all files have printed trigger renaming of files.
 
-            DirectoryInfo dInfo = new DirectoryInfo(@"C:\Users\cmackay\Desktop\Print");
             int fCount = Directory.GetFiles(dInfo.FullName, "*", SearchOption.TopDirectoryOnly).Length;
 
             // Checks to make sure the number of file printed equals the number in the sheet set.
             // If the counts match then rename all the files.
             if (fCount == set.Size)
             {
-                #region RenameFiles
-
-                string[] fileEntries = Directory.GetFiles(dInfo.FullName);
-
-                List<string> oldFilesInDirectory = new List<string>();
-
-                foreach (string oldFile in fileEntries)
-                    oldFilesInDirectory.Add(oldFile);
-
-                IList<Element> viewSheetSets = null;
-                ViewSet viewSet = null;
-                List<string> newFiles = new List<string>();
-
-                FilteredElementCollector sheetSetsCol = new FilteredElementCollector(myRevitDoc);
-                viewSheetSets = sheetSetsCol.OfClass(typeof(ViewSheetSet)).ToElements();
-
-                //GET ALL THE SHEETS FROM THE SHEETSET SELECTED
-                foreach (ViewSheetSet vs in viewSheetSets)
-                    if (vs.Name == cbRevisions.SelectedItem.ToString())
-                        viewSet = vs.Views;
-
-                List<string> reOrderedFiles = new List<string>();
-
-                foreach (ViewSheet oldSheet in viewSet)
-                {
-                    string sheetNumber = string.Empty;
-                    string sheetName = string.Empty;
-
-                    sheetNumber = oldSheet.SheetNumber;
-                    sheetName = oldSheet.Name;
-
-                    // SHEET NUMBER NEEDS TO BE CHECKED FOR THE FOLLOWING SPECIAL CHARACTERS BELOW
-
-                    // THESE NEED TO BE REPLACED WITH '-'
-                    // / * " .
-
-                    // REVIT CHECKS FOR THE FOLLOWING CHARACTERS BELOW AND DON'T NEED TO BE HANDLED
-                    // \ : {} [] ; < > ? ` ~
-
-                    // REVIT & WINDOWS ALLOW THE CHARACTERS BELOW
-                    // ! @ # $ % ^ & * ( ) _ + = - ' ,
-
-                    if (sheetNumber.Contains(@"/")) sheetNumber = sheetNumber.Replace(@"/", "-");
-
-                    if (sheetNumber.Contains("*")) sheetNumber = sheetNumber.Replace("*", "-");
-
-                    if (sheetNumber.Contains("\"")) sheetNumber = sheetNumber.Replace("\"", "-");
-
-                    if (sheetNumber.Contains(".")) sheetNumber = sheetNumber.Replace(".", "-");
-
-                    string rev = string.Empty;
-
-                    rev = oldSheet.LookupParameter("Current Revision").AsString();
-
-                    string newFileName = string.Empty;
-                    string newFile = string.Empty;
-
-                    string projectNumber = string.Empty;
-                    projectNumber = myRevitDoc.ProjectInformation.LookupParameter("Project Number").AsString();
-
-                    newFileName = projectNumber + "-" + sheetNumber + "_" + rev + ".pdf";
-                    newFile = dInfo.FullName + "\\" + newFileName;
-                    newFiles.Add(newFile);
-
-                    foreach (string file in oldFilesInDirectory)
-                        if (file.Contains(sheetNumber))
-                            reOrderedFiles.Add(file);
-                }
-
-                int index = 0;
-
-                //LOOP THROUGH EACH FILE IN THE DIRECTORY AND RENAME THE FILE
-                foreach (string oldFile in reOrderedFiles)
-                {
-                    string newF = string.Empty;
-                    newF = newFiles[index];
-
-                    if (File.Exists(newF))
-                        File.Delete(newF);
-
-                    File.Move(oldFile, newF);
-
-                    index += 1;
-                }
-
+                RenameFiles();
                 w.Dispose();
+            }
+        }
 
-                TaskDialog dialog = new TaskDialog("Publish");
-                dialog.MainInstruction = "Published successfully";
-                dialog.Show();
+        private void RenameFiles()
+        {
+            string[] fileEntries = Directory.GetFiles(dInfo.FullName);
 
-                #endregion
+            List<string> oldFilesInDirectory = new List<string>();
+
+            foreach (string oldFile in fileEntries)
+                oldFilesInDirectory.Add(oldFile);
+
+            IList<Element> viewSheetSets = null;
+            ViewSet viewSet = null;
+            List<string> newFiles = new List<string>();
+
+            FilteredElementCollector sheetSetsCol = new FilteredElementCollector(myRevitDoc);
+            viewSheetSets = sheetSetsCol.OfClass(typeof(ViewSheetSet)).ToElements();
+
+            //GET ALL THE SHEETS FROM THE SHEETSET SELECTED
+            foreach (ViewSheetSet vs in viewSheetSets)
+                if (vs.Name == cbRevisions.SelectedItem.ToString())
+                    viewSet = vs.Views;
+
+            List<string> reOrderedFiles = new List<string>();
+
+            foreach (ViewSheet oldSheet in viewSet)
+            {
+                string sheetNumber = string.Empty;
+                string sheetName = string.Empty;
+
+                sheetNumber = oldSheet.SheetNumber;
+                sheetName = oldSheet.Name;
+
+                // SHEET NUMBER NEEDS TO BE CHECKED FOR THE FOLLOWING SPECIAL CHARACTERS BELOW
+
+                // THESE NEED TO BE REPLACED WITH '-'
+                // / * " .
+
+                // REVIT CHECKS FOR THE FOLLOWING CHARACTERS BELOW AND DON'T NEED TO BE HANDLED
+                // \ : {} [] ; < > ? ` ~
+
+                // REVIT & WINDOWS ALLOW THE CHARACTERS BELOW
+                // ! @ # $ % ^ & * ( ) _ + = - ' ,
+
+                if (sheetNumber.Contains(@"/")) sheetNumber = sheetNumber.Replace(@"/", "-");
+
+                if (sheetNumber.Contains("*")) sheetNumber = sheetNumber.Replace("*", "-");
+
+                if (sheetNumber.Contains("\"")) sheetNumber = sheetNumber.Replace("\"", "-");
+
+                if (sheetNumber.Contains(".")) sheetNumber = sheetNumber.Replace(".", "-");
+
+                string rev = string.Empty;
+
+                rev = oldSheet.LookupParameter("Current Revision").AsString();
+
+                string newFileName = string.Empty;
+                string newFile = string.Empty;
+
+                string projectNumber = string.Empty;
+                projectNumber = myRevitDoc.ProjectInformation.LookupParameter("Project Number").AsString();
+
+                newFileName = projectNumber + "-" + sheetNumber + "_" + rev + ".pdf";
+                newFile = dInfo.FullName + "\\" + newFileName;
+                newFiles.Add(newFile);
+
+                foreach (string file in oldFilesInDirectory)
+                    if (file.Contains(sheetNumber))
+                        reOrderedFiles.Add(file);
             }
 
+            int index = 0;
+
+            //LOOP THROUGH EACH FILE IN THE DIRECTORY AND RENAME THE FILE
+            foreach (string oldFile in reOrderedFiles)
+            {
+                string newF = string.Empty;
+                newF = newFiles[index];
+
+                if (File.Exists(newF))
+                    File.Delete(newF);
+
+                File.Move(oldFile, newF);
+
+                index += 1;
+            }
         }
 
         private void Publish()
@@ -172,6 +164,7 @@ namespace Publish
             string prop = cbRevisions.SelectedItem.ToString();
             int selectedSequence = RevisionSequenceNumber(prop);
             Transaction trans = new Transaction(myRevitDoc, "Publish");
+            dInfo = new DirectoryInfo(txtPrintLocation.Text);
 
             try
             {
@@ -192,15 +185,7 @@ namespace Publish
                         string num = vss.GetRevisionNumberOnSheet(i);
                         string date = r.RevisionDate;
 
-                        if (rbSequence.Checked)
-                            if (selectedSequence == sequenceNumber)
-                                set.Insert(vss);
-                            else if (rbNumber.Checked)
-                                if (num == prop)
-                                    set.Insert(vss);
-                                else
-                                if (date == prop)
-                                    set.Insert(vss);
+                        set.Insert(vss);
                     }
                 }
 
@@ -215,11 +200,9 @@ namespace Publish
 
                 #endregion
          
-                string dir = @"C:\Users\cmackay\Desktop\Print";
-
                 // Create a file listener and wait until all the files have been printed before renaming
                 w = new FileSystemWatcher();
-                w.Path = dir;
+                w.Path = dInfo.FullName;
                 w.NotifyFilter = NotifyFilters.LastAccess
                                 | NotifyFilters.LastWrite
                                 | NotifyFilters.FileName
@@ -233,7 +216,6 @@ namespace Publish
                 // Print the newly created sheet set
                 print.SubmitPrint();
                 print.Dispose();
-
             }
             catch (Exception ex)
             {
@@ -293,19 +275,10 @@ namespace Publish
                     Element elem = myRevitDoc.GetElement(i);
                     Revision r = elem as Revision;
 
-                    if (rbSequence.Checked)
-                    {
-                        string sequenceName = RevisionSequenceName(r, r.Description);
+                    string sequenceName = RevisionSequenceName(r, r.Description);
 
-                        if (!cbRevisions.Items.Contains(sequenceName))
-                            cbRevisions.Items.Add(sequenceName);
-                    }
-                    else if (rbNumber.Checked)
-                        if (!cbRevisions.Items.Contains(vss.GetRevisionNumberOnSheet(i)))
-                            cbRevisions.Items.Add(vss.GetRevisionNumberOnSheet(i));
-                    else
-                        if (!cbRevisions.Items.Contains(r.RevisionDate))
-                            cbRevisions.Items.Add(r.RevisionDate);
+                    if (!cbRevisions.Items.Contains(sequenceName))
+                        cbRevisions.Items.Add(sequenceName);
                 }
             }
         }
@@ -321,6 +294,19 @@ namespace Publish
                 btnPublish.Enabled = true;
 
             LoadItems();
+        }
+
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.ValidateNames = false;
+            ofd.CheckFileExists = false;
+            ofd.CheckPathExists = true;
+
+            if(ofd.ShowDialog() == DialogResult.OK)
+            {
+                txtPrintLocation.Text = ofd.FileName;
+            }
         }
     }
 }
